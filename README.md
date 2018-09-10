@@ -1,6 +1,4 @@
-# **CS 5V81.001.  Implementation of data structures and algorithms**
-
-## Long Project LP1: **Integer arithmetic with arbitrarily large numbers**
+# **Integer arithmetic with arbitrarily large numbers**
 - This is a Java program that implements arithmetic with large integers, of arbitrary size.
 
 ## **Group Members**:
