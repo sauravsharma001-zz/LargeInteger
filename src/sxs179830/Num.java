@@ -8,15 +8,24 @@ package sxs179830;
 public class Num  implements Comparable<Num> {
 
     static long defaultBase = 10;  // Change as needed
-    long base = defaultBase;  // Change as needed
+    long base = 1000;  // Change as needed
     long[] arr;  // array to store arbitrarily large integers
     boolean isNegative;  // boolean flag to represent negative numbers
     int len;  // actual number of elements of array that are used;  number is stored in arr[0..len-1]
 
     public Num(String s) {
+        len = s.length()
     }
 
     public Num(long x) {
+        this.len = (int) Math.ceil(Math.log(x)/Math.log(base));
+        this.arr = new long[len];
+        int i = 0;
+        while(x % base > 0) {
+            arr[i] = x % base;
+            x /= base;
+            i++;
+        }
     }
 
     public static Num add(Num a, Num b) {
@@ -73,7 +82,10 @@ public class Num  implements Comparable<Num> {
 
     // Return number equal to "this" number, in base=newBase
     public Num convertBase(int newBase) {
-        return null;
+//        while (n > 0) {
+//            nextDigit = n % newBase;  // write this into arr
+//            n = n / b;
+//        }
     }
 
     // Divide by 2, for using in binary search
@@ -97,7 +109,7 @@ public class Num  implements Comparable<Num> {
 
 
     public static void main(String[] args) {
-        Num x = new Num(999);
+        Num x = new Num(9999);
         Num y = new Num("8");
         Num z = Num.add(x, y);
         System.out.println(z);

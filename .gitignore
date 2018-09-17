@@ -1,7 +1,7 @@
 /.idea/
 /.classpath
 /.project
-out
-LargeInteger.iml
+/out/
+/LargeInteger.iml
 /.settings
 /bin/
