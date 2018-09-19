@@ -35,6 +35,7 @@ public class Num  implements Comparable<Num> {
     public Num(long x) {
         if(x < 0) {
             this.isNegative = true;
+            x = x * -1;
         }
         this.size = (int) Math.ceil(Math.log10(x)/Math.log10(base));
         this.arr = new long[size];
@@ -49,35 +50,58 @@ public class Num  implements Comparable<Num> {
     public static Num add(Num a, Num b) {
 
         StringBuilder sb = new StringBuilder();
-
+        Num addition = null;
         // XOR Operation, if one of the number is negative
         if(a.isNegative ^ b.isNegative) {
             if(a.isNegative)
-                return subtract(b, a);
+                return subtractWithNoSign(b, a);
             else
-                return subtract(a, b);
+                return subtractWithNoSign(a, b);
         } else {
-            int i = 0, carry = 0;
-            long temp;
-            while(i < a.size() || i < b.size()) {
-                temp = carry;
-                if(i < a.size())
-                    temp += a.arr[i];
-                if(i < b.size())
-                    temp += b.arr[i];
-                sb.insert(0, temp % a.base());
-                carry = temp > a.base() ? (int) ( temp / a.base()) : 0;
-                i++;
-            }
+           addition = addWithNoSign(a, b);
             // If both are negative then add '-' in front
             if(a.isNegative)
-                sb.insert(0, "-");
+                addition.isNegative = true;
+        }
+        return addition;
+    }
+
+    public static Num addWithNoSign(Num a, Num b) {
+        StringBuilder sb = new StringBuilder();
+        int i = 0, carry = 0;
+        long temp;
+        while(i < a.size() || i < b.size()) {
+            temp = carry;
+            if(i < a.size())
+                temp += a.arr[i];
+            if(i < b.size())
+                temp += b.arr[i];
+            sb.insert(0, temp % a.base());
+            carry = temp > a.base() ? (int) ( temp / a.base()) : 0;
+            i++;
         }
         return new Num(sb.toString());
     }
 
     public static Num subtract(Num a, Num b) {
-        return null;
+        StringBuilder sb = new StringBuilder();
+        Num val = null;
+        // XOR Operation, if one of the number is negative
+        if(a.isNegative ^ b.isNegative) {
+            val = addWithNoSign(a, b);
+            val.isNegative = a.isNegative;
+        } else {
+
+        }
+        return val;
+    }
+
+    public static Num subtractWithNoSign(Num a, Num b) {
+        Num val = null;
+        StringBuilder sb = new StringBuilder();
+
+
+        return val;
     }
 
     public static Num product(Num a, Num b) {
@@ -108,7 +132,30 @@ public class Num  implements Comparable<Num> {
     // Utility functions
     // compare "this" to "other": return +1 if this is greater, 0 if equal, -1 otherwise
     public int compareTo(Num other) {
-        return 0;
+        if(this.isNegative ^ other.isNegative) {
+            return this.isNegative ? -1 : 1;
+        }
+        else {
+            int flag;
+            if(this.size() == other.size()) {
+                int j = this.size() - 1;
+                while(j >= 0) {
+                    if(this.arr[j] == other.arr[j]) {
+                        j--;
+                        if(j==0)
+                            return 0;
+                    } else {
+                        flag = this.arr[j] > other.arr[j] ? 1 : -1;
+                        return this.isNegative ? flag*-1 : flag;
+                    }
+                }
+            } else {
+                flag = (this.size > other.size() ? 1 : -1);
+                return this.isNegative ? flag*-1 : flag;
+            }
+        }
+        System.out.println("reas");
+        return -1;
     }
 
     // Output using the format "base: elements of list ..."
@@ -150,7 +197,7 @@ public class Num  implements Comparable<Num> {
 
     // Divide by 2, for using in binary search
     public Num by2() {
-        return null;
+        return divide(this, new Num(2));
     }
 
     // Evaluate an expression in postfix and return resulting number
@@ -170,9 +217,12 @@ public class Num  implements Comparable<Num> {
 
     public static void main(String[] args) {
         Num x = new Num(9999);
-        Num y = new Num("1234567890");
+        Num y = new Num("9999");
         Num z = Num.add(x, y);
         System.out.println("sum: " + z);
+        Num s = Num.subtract(x, y);
+        System.out.println("sub: " + s);
+        System.out.println("comp: " + y.compareTo(x));
         Num a = Num.power(x, 8);
         System.out.println(a);
         if(z != null) z.printList();
