@@ -11,7 +11,7 @@ public class Num  implements Comparable<Num> {
     long base = 1000;  // Change as needed
     long[] arr;  // array to store arbitrarily large integers
     boolean isNegative;  // boolean flag to represent negative numbers
-    int len;  // actual number of elements of array that are used;  number is stored in arr[0..len-1]
+    int size;  // actual number of elements of array that are used;  number is stored in arr[0..len-1]
 
     public Num(String s) {
         if(s != null && s.length() > 0) {
@@ -20,9 +20,9 @@ public class Num  implements Comparable<Num> {
                 s = s.substring(1);
             }
             int logVal = (int) Math.log10(base);
-            len = (s.length() / logVal) + 1;
+            size = (s.length() / logVal) + 1;
             int i = 0;
-            this.arr = new long[len];
+            this.arr = new long[size];
             while (s != null && s != "") {
                 Long l = Long.valueOf(s.substring(s.length() > 3 ? s.length() - 3 : 0, s.length()));
                 s = s.length() > 3 ? s.substring(0, s.length() - logVal) : null;
@@ -36,8 +36,8 @@ public class Num  implements Comparable<Num> {
         if(x < 0) {
             this.isNegative = true;
         }
-        this.len = (int) Math.ceil(Math.log10(x)/Math.log10(base));
-        this.arr = new long[len];
+        this.size = (int) Math.ceil(Math.log10(x)/Math.log10(base));
+        this.arr = new long[size];
         int i = 0;
         while(x % base > 0) {
             arr[i] = x % base;
@@ -59,11 +59,11 @@ public class Num  implements Comparable<Num> {
         } else {
             int i = 0, carry = 0;
             long temp;
-            while(i < a.len || i < b.len) {
+            while(i < a.size() || i < b.size()) {
                 temp = carry;
-                if(i < a.len)
+                if(i < a.size())
                     temp += a.arr[i];
-                if(i < b.len)
+                if(i < b.size())
                     temp += b.arr[i];
                 sb.insert(0, temp % a.base());
                 carry = temp > a.base() ? (int) ( temp / a.base()) : 0;
@@ -116,7 +116,7 @@ public class Num  implements Comparable<Num> {
     // then the output is "100: 65 9 1"
     public void printList() {
         System.out.print(base + ": ");
-        for(int i = len-1; i >= 0; i--) {
+        for(int i = size-1; i >= 0; i--) {
             System.out.print(arr[i] + " ");
         }
         System.out.println();
@@ -129,13 +129,15 @@ public class Num  implements Comparable<Num> {
             sb.append("-");
         }
         Num temp = convertBase(10);
-        for(int i = temp.len-1; i >=0; i--) {
+        for(int i = temp.size()-1; i >=0; i--) {
             sb.append(temp.arr[i]);
         }
         return sb.toString();
     }
 
     public long base() { return base; }
+
+    public int size() { return size; }
 
     // Return number equal to "this" number, in base=newBase
     public Num convertBase(int newBase) {
