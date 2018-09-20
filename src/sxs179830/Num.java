@@ -7,7 +7,7 @@ package sxs179830;
 
 public class Num  implements Comparable<Num> {
 
-    static long defaultBase = 10;  // Change as needed
+    static long defaultBase = 1000;  // Change as needed
     long base = 1000;  // Change as needed
     long[] arr;  // array to store arbitrarily large integers
     boolean isNegative;  // boolean flag to represent negative numbers
@@ -19,7 +19,7 @@ public class Num  implements Comparable<Num> {
                 this.isNegative = true;
                 s = s.substring(1);
             }
-            int logVal = (int) Math.log10(base);
+            int logVal = (int) Math.log10(defaultBase);
             size = (s.length() / logVal) + 1;
             int i = 0;
             this.arr = new long[size];
@@ -45,6 +45,12 @@ public class Num  implements Comparable<Num> {
             x /= base;
             i++;
         }
+    }
+
+    public Num(long[] arr, int base, boolean isNegative) {
+        this.arr = arr;
+        this.base = base;
+        this.isNegative = isNegative;
     }
 
     public static Num add(Num a, Num b) {
@@ -163,7 +169,10 @@ public class Num  implements Comparable<Num> {
     // then the output is "100: 65 9 1"
     public void printList() {
         System.out.print(base + ": ");
+        if(this.isNegative)
+            System.out.println("-");
         for(int i = size-1; i >= 0; i--) {
+//            if(i != 0)
             System.out.print(arr[i] + " ");
         }
         System.out.println();
@@ -217,7 +226,7 @@ public class Num  implements Comparable<Num> {
 
     public static void main(String[] args) {
         Num x = new Num(9999);
-        Num y = new Num("9999");
+        Num y = new Num("-123456789012");
         Num z = Num.add(x, y);
         System.out.println("sum: " + z);
         Num s = Num.subtract(x, y);
@@ -226,5 +235,6 @@ public class Num  implements Comparable<Num> {
         Num a = Num.power(x, 8);
         System.out.println(a);
         if(z != null) z.printList();
+        y.printList();
     }
 }
