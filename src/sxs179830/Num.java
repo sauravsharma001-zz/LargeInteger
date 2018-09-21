@@ -5,6 +5,8 @@
 // Change following line to your NetId
 package sxs179830;
 
+import java.util.Scanner;
+
 public class Num  implements Comparable<Num> {
 
     static long defaultBase = 1000;  // Change as needed
@@ -47,10 +49,11 @@ public class Num  implements Comparable<Num> {
         }
     }
 
-    public Num(long[] arr, int base, boolean isNegative) {
+    public Num(long[] arr, long base, boolean isNegative) {
         this.arr = arr;
         this.base = base;
         this.isNegative = isNegative;
+        this.size = arr.length;
     }
 
     public static Num add(Num a, Num b) {
@@ -59,10 +62,17 @@ public class Num  implements Comparable<Num> {
         Num addition = null;
         // XOR Operation, if one of the number is negative
         if(a.isNegative ^ b.isNegative) {
-            if(a.isNegative)
-                return subtractWithNoSign(b, a);
-            else
-                return subtractWithNoSign(a, b);
+            if(a.isNegative) {
+                a.isNegative = false;
+                addition = subtract(a, b);
+                addition.isNegative = true;
+                a.isNegative = true;
+            }
+            else {
+                b.isNegative = false;
+                addition = subtract(a, b);
+                b.isNegative = true;
+            }
         } else {
            addition = addWithNoSign(a, b);
             // If both are negative then add '-' in front
@@ -73,7 +83,7 @@ public class Num  implements Comparable<Num> {
     }
 
     public static Num addWithNoSign(Num a, Num b) {
-        StringBuilder sb = new StringBuilder();
+        long[] arr = new long[a.size() > b.size() ? a.size() + 1: b.size() + 1];
         int i = 0, carry = 0;
         long temp;
         while(i < a.size() || i < b.size()) {
@@ -82,11 +92,14 @@ public class Num  implements Comparable<Num> {
                 temp += a.arr[i];
             if(i < b.size())
                 temp += b.arr[i];
-            sb.insert(0, temp % a.base());
-            carry = temp > a.base() ? (int) ( temp / a.base()) : 0;
+            arr[i] = temp % a.base();
+            System.out.println(i + "  " + arr[i]);
+            carry = temp >= a.base() ? (int) ( temp / a.base()) : 0;
             i++;
         }
-        return new Num(sb.toString());
+        if(carry != 0)
+            arr[i] = 1;
+        return new Num(arr, a.base(), false);
     }
 
     public static Num subtract(Num a, Num b) {
@@ -97,16 +110,46 @@ public class Num  implements Comparable<Num> {
             val = addWithNoSign(a, b);
             val.isNegative = a.isNegative;
         } else {
-
+            if(a.compareTo(b) == 0) {
+                return new Num("0");
+            }
+            Num biggerNum = null;
+            Num smallerNum = null;
+            boolean isNegativeA = a.isNegative, flag = true;
+            a.isNegative = false;
+            b.isNegative = false;
+            long[] arr;
+            if(a.compareTo(b) >  0) {
+                biggerNum = a;
+                smallerNum = b;
+                flag = isNegativeA;
+            } else {
+                biggerNum = b;
+                smallerNum = a;
+                flag = !isNegativeA;
+            }
+            arr = new long[biggerNum.size()];
+            int i = 0;
+            long carry = 0;
+            while(i < biggerNum.size() && i < smallerNum.size()) {
+                if(biggerNum.arr[i] - carry < smallerNum.arr[i]) {
+                    arr [i] = biggerNum.arr[i] + biggerNum.base() - smallerNum.arr[i] - carry;
+                    carry = 1;
+                }   else {
+                    arr[i] = biggerNum.arr[i] - smallerNum.arr[i] - carry;
+                    carry = 0;
+                }
+                i++;
+            }
+            while(i < biggerNum.size()) {
+                arr[i] = biggerNum.arr[i] - carry;
+                carry = 0;
+                i++;
+            }
+            a.isNegative = isNegativeA;
+            b.isNegative = isNegativeA;
+            val = new Num(arr, a.base(), flag);
         }
-        return val;
-    }
-
-    public static Num subtractWithNoSign(Num a, Num b) {
-        Num val = null;
-        StringBuilder sb = new StringBuilder();
-
-
         return val;
     }
 
@@ -169,13 +212,18 @@ public class Num  implements Comparable<Num> {
     // then the output is "100: 65 9 1"
     public void printList() {
         System.out.print(base + ": ");
+        StringBuilder res = new StringBuilder();
         if(this.isNegative)
-            System.out.println("-");
+            res.append("-");
         for(int i = size-1; i >= 0; i--) {
-//            if(i != 0)
-            System.out.print(arr[i] + " ");
+            if(i == size - 1) {
+                if(arr[i] != 0)
+                    res.append(arr[i] + " ");
+            }   else {
+                res.append(arr[i] + " ");
+            }
         }
-        System.out.println();
+        System.out.println(res);
     }
 
     // Return number to a string in base 10
@@ -186,7 +234,8 @@ public class Num  implements Comparable<Num> {
         }
         Num temp = convertBase(10);
         for(int i = temp.size()-1; i >=0; i--) {
-            sb.append(temp.arr[i]);
+            if(!(i == size-1 && arr[i] == 0))
+                sb.append(temp.arr[i]);
         }
         return sb.toString();
     }
@@ -206,7 +255,7 @@ public class Num  implements Comparable<Num> {
 
     // Divide by 2, for using in binary search
     public Num by2() {
-        return divide(this, new Num(2));
+        return null;
     }
 
     // Evaluate an expression in postfix and return resulting number
@@ -225,16 +274,67 @@ public class Num  implements Comparable<Num> {
 
 
     public static void main(String[] args) {
-        Num x = new Num(9999);
-        Num y = new Num("-123456789012");
-        Num z = Num.add(x, y);
-        System.out.println("sum: " + z);
-        Num s = Num.subtract(x, y);
-        System.out.println("sub: " + s);
-        System.out.println("comp: " + y.compareTo(x));
-        Num a = Num.power(x, 8);
-        System.out.println(a);
-        if(z != null) z.printList();
-        y.printList();
+
+        Scanner in = new Scanner(System.in);
+        Num num1 = new Num(999);
+        Num num2 = new Num("1");
+//        System.out.println("--------Menu Options Usage--------");
+//        System.out.println("Add: 1 <x>");
+//        System.out.println("Subtract: 2");
+//        System.out.println("Product: 3 <x>");
+//        System.out.println("Divide: 4");
+//        System.out.println("Power: 5 <val>");
+//        System.out.println("Modulus: 6");
+//        System.out.println("Square Root: 7");
+//        System.out.println("Compare: 8");
+////        System.out.println("Change Base: 9 <base>");
+//        System.out.println("Print Number (as List): 10");
+//        System.out.println("Print Number (as string): 11");
+//        System.out.println("Evaluate Infix: 12");
+//        System.out.println("Evaluate Postfix: 13");
+//        System.out.println("Exit: 14");
+//        System.out.println("----------------------------");
+//
+//        while_loop:
+//        while (in.hasNext()) {
+//            int com = in.nextInt();
+//            switch (com) {
+//                case 1: // Add two Number.
+//                    System.out.println("Adding " + num1 + " & " + num2 + ": " + Num.add(num1, num2));
+//                    break;
+//                case 2: // Subtract two Number
+//                    System.out.println("Subtracting " + num1 + " from " + num2 + ": " + Num.subtract(num1, num2));
+//                    break;
+//                case 3: // Multiplying two Number
+//                    System.out.println("Multiplying " + num1 + " & " + num2 + ": " + Num.product(num1, num2));
+//                    break;
+//                case 4: // Division of two Number
+//                    System.out.println("Dividing " + num1 + " by " + num2 + ": " + Num.divide(num1, num2));
+//                    break;
+//                case 5: // Num raised to another Number
+//                    System.out.println(num1 + " raised to " + num2 + ": " + Num.power(num1, in.nextLong()));
+//                    break;
+//                case 6: // modulus of two number
+//                    System.out.println(num1 + " % " + num2 + ": " + Num.mod(num1, num2));
+//                    break;
+//                case 7: // Sqrt of Number
+//                    System.out.println("Square root of " + num1 + ": " + Num.squareRoot(num1));
+//                    break;
+//                case 8: // Division of two Number
+//                    System.out.println("Dividing " + num1 + " by " + num2 + ": " + Num.divide(num1, num2));
+//                    break;
+////                case 9: // Num raised to another Number
+////                    System.out.println(num1 + " after changing base: " + Num.convertBase(num1, in.nextLong()));
+////                    break;
+//                case 10: // Printing Num as List
+//                    num1.printList();
+//                    break;
+//                case 11: // Printing Num as String
+//                    System.out.println(num1);
+//                    break;
+//                default: // Exit loop
+//                    break while_loop;
+//            }
+//        }
     }
 }
