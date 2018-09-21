@@ -278,63 +278,63 @@ public class Num  implements Comparable<Num> {
         Scanner in = new Scanner(System.in);
         Num num1 = new Num(999);
         Num num2 = new Num("1");
-//        System.out.println("--------Menu Options Usage--------");
-//        System.out.println("Add: 1 <x>");
-//        System.out.println("Subtract: 2");
-//        System.out.println("Product: 3 <x>");
-//        System.out.println("Divide: 4");
-//        System.out.println("Power: 5 <val>");
-//        System.out.println("Modulus: 6");
-//        System.out.println("Square Root: 7");
-//        System.out.println("Compare: 8");
-////        System.out.println("Change Base: 9 <base>");
-//        System.out.println("Print Number (as List): 10");
-//        System.out.println("Print Number (as string): 11");
-//        System.out.println("Evaluate Infix: 12");
-//        System.out.println("Evaluate Postfix: 13");
-//        System.out.println("Exit: 14");
-//        System.out.println("----------------------------");
-//
-//        while_loop:
-//        while (in.hasNext()) {
-//            int com = in.nextInt();
-//            switch (com) {
-//                case 1: // Add two Number.
-//                    System.out.println("Adding " + num1 + " & " + num2 + ": " + Num.add(num1, num2));
+        System.out.println("--------Menu Options Usage--------");
+        System.out.println("Add: 1 <x>");
+        System.out.println("Subtract: 2");
+        System.out.println("Product: 3 <x>");
+        System.out.println("Divide: 4");
+        System.out.println("Power: 5 <val>");
+        System.out.println("Modulus: 6");
+        System.out.println("Square Root: 7");
+        System.out.println("Compare: 8");
+//        System.out.println("Change Base: 9 <base>");
+        System.out.println("Print Number (as List): 10");
+        System.out.println("Print Number (as string): 11");
+        System.out.println("Evaluate Infix: 12");
+        System.out.println("Evaluate Postfix: 13");
+        System.out.println("Exit: 14");
+        System.out.println("----------------------------");
+
+        while_loop:
+        while (in.hasNext()) {
+            int com = in.nextInt();
+            switch (com) {
+                case 1: // Add two Number.
+                    System.out.println("Adding " + num1 + " & " + num2 + ": " + Num.add(num1, num2));
+                    break;
+                case 2: // Subtract two Number
+                    System.out.println("Subtracting " + num1 + " from " + num2 + ": " + Num.subtract(num1, num2));
+                    break;
+                case 3: // Multiplying two Number
+                    System.out.println("Multiplying " + num1 + " & " + num2 + ": " + Num.product(num1, num2));
+                    break;
+                case 4: // Division of two Number
+                    System.out.println("Dividing " + num1 + " by " + num2 + ": " + Num.divide(num1, num2));
+                    break;
+                case 5: // Num raised to another Number
+                    System.out.println(num1 + " raised to " + num2 + ": " + Num.power(num1, in.nextLong()));
+                    break;
+                case 6: // modulus of two number
+                    System.out.println(num1 + " % " + num2 + ": " + Num.mod(num1, num2));
+                    break;
+                case 7: // Sqrt of Number
+                    System.out.println("Square root of " + num1 + ": " + Num.squareRoot(num1));
+                    break;
+                case 8: // Division of two Number
+                    System.out.println("Dividing " + num1 + " by " + num2 + ": " + Num.divide(num1, num2));
+                    break;
+//                case 9: // Num raised to another Number
+//                    System.out.println(num1 + " after changing base: " + Num.convertBase(num1, in.nextLong()));
 //                    break;
-//                case 2: // Subtract two Number
-//                    System.out.println("Subtracting " + num1 + " from " + num2 + ": " + Num.subtract(num1, num2));
-//                    break;
-//                case 3: // Multiplying two Number
-//                    System.out.println("Multiplying " + num1 + " & " + num2 + ": " + Num.product(num1, num2));
-//                    break;
-//                case 4: // Division of two Number
-//                    System.out.println("Dividing " + num1 + " by " + num2 + ": " + Num.divide(num1, num2));
-//                    break;
-//                case 5: // Num raised to another Number
-//                    System.out.println(num1 + " raised to " + num2 + ": " + Num.power(num1, in.nextLong()));
-//                    break;
-//                case 6: // modulus of two number
-//                    System.out.println(num1 + " % " + num2 + ": " + Num.mod(num1, num2));
-//                    break;
-//                case 7: // Sqrt of Number
-//                    System.out.println("Square root of " + num1 + ": " + Num.squareRoot(num1));
-//                    break;
-//                case 8: // Division of two Number
-//                    System.out.println("Dividing " + num1 + " by " + num2 + ": " + Num.divide(num1, num2));
-//                    break;
-////                case 9: // Num raised to another Number
-////                    System.out.println(num1 + " after changing base: " + Num.convertBase(num1, in.nextLong()));
-////                    break;
-//                case 10: // Printing Num as List
-//                    num1.printList();
-//                    break;
-//                case 11: // Printing Num as String
-//                    System.out.println(num1);
-//                    break;
-//                default: // Exit loop
-//                    break while_loop;
-//            }
-//        }
+                case 10: // Printing Num as List
+                    num1.printList();
+                    break;
+                case 11: // Printing Num as String
+                    System.out.println(num1);
+                    break;
+                default: // Exit loop
+                    break while_loop;
+            }
+        }
     }
 }
