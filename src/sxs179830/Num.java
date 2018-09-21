@@ -287,7 +287,7 @@ public class Num  implements Comparable<Num> {
         System.out.println("Modulus: 6");
         System.out.println("Square Root: 7");
         System.out.println("Compare: 8");
-//        System.out.println("Change Base: 9 <base>");
+        System.out.println("Change Base: 9 <base>");
         System.out.println("Print Number (as List): 10");
         System.out.println("Print Number (as string): 11");
         System.out.println("Evaluate Infix: 12");
@@ -323,9 +323,9 @@ public class Num  implements Comparable<Num> {
                 case 8: // Division of two Number
                     System.out.println("Dividing " + num1 + " by " + num2 + ": " + Num.divide(num1, num2));
                     break;
-//                case 9: // Num raised to another Number
-//                    System.out.println(num1 + " after changing base: " + Num.convertBase(num1, in.nextLong()));
-//                    break;
+                case 9: // Num raised to another Number
+                    System.out.println(num1 + " after changing base: " + num1.convertBase(in.nextInt()));
+                    break;
                 case 10: // Printing Num as List
                     num1.printList();
                     break;
