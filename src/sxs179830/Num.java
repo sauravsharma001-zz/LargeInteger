@@ -164,12 +164,48 @@ public class Num  implements Comparable<Num> {
 
     // Use binary search to calculate a/b
     public static Num divide(Num a, Num b) {
-        return null;
+    	long quotient;
+    	boolean isResultNeg = false;
+    	int i = a.compareTo(b);
+    	if(i == -1) {
+    		quotient = 0;
+    	}
+    	else if(b.arr.length == 0) {
+    		return null;	
+    	}
+    	else {
+    		quotient = 0;
+    		while(true) {
+    			Num res = subtract(a, b);
+    			if(res.compareTo(b) >= 0) {
+    				a = res;
+    			}else {break;}
+    			
+    			quotient++;
+    		}
+    	}
+    	
+    	if(a.isNegative == b.isNegative) {
+    		isResultNeg = false;
+    	}else {
+    		isResultNeg = false;
+    	}
+    	
+    	Num result = new Num(quotient);
+    	result.isNegative = isResultNeg;
+        return  result;
     }
 
     // return a%b
     public static Num mod(Num a, Num b) {
-        return null;
+    	while(true) {
+			Num res = subtract(a, b);
+			if(res.compareTo(b) > 0) {
+				a = res;
+			}else {
+				return res;
+			}
+		}
     }
 
     // Use binary search
@@ -252,6 +288,34 @@ public class Num  implements Comparable<Num> {
 //        }
         return this;
     }
+    
+//
+//    public long[] convertBase(Num num) {
+//    	long[] covertedNum;
+//    	if(num.defaultBase == num.base) {
+//    		covertedNum = num.arr;
+//    	}
+//    	else{
+//    		for(int i=0; i<num.arr.length; i++) {
+//    			//add your base conversion.
+//    			long number = changeBase(num.arr[i], num.defaultBase, num.base);
+//    		}
+//    	}
+//    	return covertedNum;
+//    }
+    
+    public long changeBase(long number, long fromBase, long toBase) {
+            long convertedNumber = 0;
+            long nextLong;
+            int i = 0;
+            while (number != 0) {
+            	nextLong = number  % toBase;
+            	convertedNumber = (long) (convertedNumber + nextLong * Math.pow(fromBase, i));
+                number = number / 10;
+                i++;
+            }
+            return convertedNumber;
+        }    	
 
     // Divide by 2, for using in binary search
     public Num by2() {
@@ -276,8 +340,8 @@ public class Num  implements Comparable<Num> {
     public static void main(String[] args) {
 
         Scanner in = new Scanner(System.in);
-        Num num1 = new Num(999);
-        Num num2 = new Num("1");
+        Num num1 = new Num(1000);
+        Num num2 = new Num("51245");
         System.out.println("--------Menu Options Usage--------");
         System.out.println("Add: 1 <x>");
         System.out.println("Subtract: 2");
@@ -323,9 +387,11 @@ public class Num  implements Comparable<Num> {
                 case 8: // Division of two Number
                     System.out.println("Dividing " + num1 + " by " + num2 + ": " + Num.divide(num1, num2));
                     break;
-                case 9: // Num raised to another Number
-                    System.out.println(num1 + " after changing base: " + num1.convertBase(in.nextInt()));
-                    break;
+//                case 9: // Num raised to another Number
+//                	long convert2Base = in.nextLong();
+//                	num1.base = convert2Base;
+//                    System.out.println(num1 + " after changing base: " + num1.convertBase(num1));
+//                    break;
                 case 10: // Printing Num as List
                     num1.printList();
                     break;
