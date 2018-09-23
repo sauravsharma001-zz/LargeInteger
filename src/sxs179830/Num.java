@@ -5,7 +5,7 @@
 // Change following line to your NetId
 package sxs179830;
 
-import java.util.Scanner;
+import java.util.*;
 
 public class Num  implements Comparable<Num> {
 
@@ -418,26 +418,104 @@ public class Num  implements Comparable<Num> {
         return new Num(result, this.base(), this.isNegative);
     }
 
-    /**
-     * Evaluate an expression in postfix and return resulting number
-     * Each string is one of: "*", "+", "-", "/", "%", "^", "0", or
-     * a number: [1-9][0-9]*.  There is no unary minus operator.
-     * @param expr given postfix expression in array of String
-     * @return evaluate value for the given postfix expression
-     */
-    public static Num evaluatePostfix(String[] expr) {
-        return null;
+    public static Num performOperation(String operator, Num value1, Num value2) {
+        Num result = null;
+        switch (operator) {
+            case "*":
+                result = product(value1, value2);
+                break;
+            case "+":
+                result = add(value1, value2);
+                break;
+            case "-":
+                result = subtract(value1, value2);
+                break;
+            case "/":
+                result = divide(value1, value2);
+                break;
+            case "%":
+                result = mod(value1, value2);
+                break;
+            //TODO: Hadle case "^":
+            default:
+                break;
+        }
+        return result;
     }
 
-    /**
-     * Evaluate an expression in infix and return resulting number
-     * Each string is one of: "*", "+", "-", "/", "%", "^", "(", ")", "0", or
-     * a number: [1-9][0-9]*.  There is no unary minus operator.
-     * @param expr given infix expression in array of String
-     * @return evaluate value for the given infix expression
-     */
+    // Evaluate an expression in postfix and return resulting number
+    // Each string is one of: "*", "+", "-", "/", "%", "^", "0", or
+    // a number: [1-9][0-9]*.  There is no unary minus operator.
+    public static Num evaluatePostfix(String[] expr) {
+        Set<String> operators = new HashSet<>(Arrays.asList("*", "+", "-", "/", "%", "^"));
+        Stack<String> operandStack = new Stack<>();
+        Num result = null;
+        int strLen = expr.length;
+        int i=0;
+        while (strLen>0) {
+            String nextString = expr[i];
+            if(operators.contains(nextString)) {
+                result = performOperation(nextString,new Num(operandStack.pop()),new Num(operandStack.pop()));
+            } else {
+                operandStack.push(nextString);
+            }
+            i++;
+            strLen--;
+        }
+        return result;
+    }
+
+    public static boolean hasPrecedence(String op1, String op2)
+    {
+        if (op2.equals("(") || op2.equals(")"))
+            return false;
+        if ((op1.equals("*") || (op1.equals("/")) && (op2.equals("+") || op2.equals("-"))))
+            return false;
+        else
+            return true;
+    }
+
+    // Evaluate an expression in infix and return resulting number
+    // Each string is one of: "*", "+", "-", "/", "%", "^", "(", ")", "0", or
+    // a number: [1-9][0-9]*.  There is no unary minus operator.
     public static Num evaluateInfix(String[] expr) {
-        return null;
+        Set<String> operators = new HashSet<>(Arrays.asList("*", "+", "-", "/", "%", "^"));
+        Stack<String> operandStack = new Stack<>();
+        Stack<String> operatorStack = new Stack<>();
+        Num result = null;
+
+        int strLen = expr.length;
+        int i=0;
+        while (strLen>0) {
+            String nextString = expr[i];
+            if(operators.contains(nextString)) {
+                while(!operatorStack.empty() && hasPrecedence(nextString,operatorStack.peek())) {
+                    result = performOperation(nextString,new Num(operandStack.pop()),new Num(operandStack.pop()));
+                    operandStack.push(result.toString());
+                }
+                operatorStack.push(nextString);
+
+            } else if(nextString.equals("(")) {
+                operatorStack.push(nextString);
+            } else if(nextString.equals(")")) {
+                while(!operatorStack.peek().equals("(")) {
+                    result = performOperation(operatorStack.pop(),new Num(operandStack.pop()),new Num(operandStack.pop()));
+                    operandStack.push(result.toString());
+                }
+                operatorStack.pop();
+            } else {
+                operandStack.push(nextString);
+            }
+
+            i++;
+            strLen--;
+        }
+
+        while (!operatorStack.empty()) {
+            result = performOperation(operatorStack.pop(),new Num(operandStack.pop()),new Num(operandStack.pop()));
+            operandStack.push(result.toString());
+        }
+        return new Num(operandStack.pop());
     }
 
 
@@ -501,6 +579,16 @@ public class Num  implements Comparable<Num> {
                     break;
                 case 11: // Printing Num as String
                     System.out.println(num1);
+                    break;
+                case 12: // Infix Evaluation
+                    Num res = evaluateInfix(new String[]{"(","10","+","3",")","+","2"});
+                    System.out.println(res.toString().replaceFirst("^0+(?!$)", ""));
+                    break;
+
+                case 13: // Postfix Evaluation
+                    // TODO: Sum of nums with a negative sign returning wrong sign
+                    Num result = evaluatePostfix(new String[]{"101","-99","+"});
+                    System.out.println(result.toString().replaceFirst("^0+(?!$)", ""));
                     break;
                 default: // Exit loop
                     break while_loop;
