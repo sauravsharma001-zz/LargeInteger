@@ -260,10 +260,27 @@ public class Num  implements Comparable<Num> {
      * @return square root of the given number
      */
     public static Num squareRoot(Num a) {
-        if(a == null) return null;
-        if(a.isNegative) return null;
+        if(a == null) throw new NullPointerException();
+        if(a.isNegative) throw new ArithmeticException();
+        if(a.compareTo(new Num(0)) == 0 || a.compareTo(new Num(1)) == 0) return a;
 
-        return null;
+        Num start = new Num(2);
+        Num end = a.by2();
+        Num mid, ans = null;
+        int comp;
+        while(start.compareTo(end) < 1) {
+            mid = a.by2();
+            comp = Num.product(mid, mid).compareTo(a);
+            if(comp == 0) {
+                return mid;
+            } else if(comp < 0) {
+                start = Num.add(mid, new Num(1));
+                ans = mid;
+            } else {
+               end = Num.subtract(mid, new Num(1));
+            }
+        }
+        return ans;
     }
 
     /**
