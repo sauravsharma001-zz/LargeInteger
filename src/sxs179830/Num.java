@@ -15,6 +15,10 @@ public class Num  implements Comparable<Num> {
     boolean isNegative;  // boolean flag to represent negative numbers
     int size;  // actual number of elements of array that are used;  number is stored in arr[0..len-1]
 
+    /**
+     * Convert string to array of long in Num Object with defaultBase
+     * @param s number in base 10, as String
+     */
     public Num(String s) {
         if(s != null && s.length() > 0) {
             if (s.trim().charAt(0) == '-') {
@@ -34,21 +38,31 @@ public class Num  implements Comparable<Num> {
         }
     }
 
+    /**
+     * Convert long value in Num object with defaultBase
+     * @param x Long value
+     */
     public Num(long x) {
         if(x < 0) {
             this.isNegative = true;
             x = x * -1;
         }
-        this.size = (int) Math.ceil(Math.log10(x)/Math.log10(base));
+        this.size = (int) Math.ceil(Math.log10(x)/Math.log10(defaultBase));
         this.arr = new long[size];
         int i = 0;
-        while(x % base > 0) {
-            arr[i] = x % base;
-            x /= base;
+        while(x % defaultBase > 0) {
+            arr[i] = x % defaultBase;
+            x /= defaultBase;
             i++;
         }
     }
 
+    /**
+     *
+     * @param arr array of number
+     * @param base base of number given
+     * @param isNegative represent the sign of number
+     */
     public Num(long[] arr, long base, boolean isNegative) {
         this.arr = arr;
         this.base = base;
@@ -56,6 +70,12 @@ public class Num  implements Comparable<Num> {
         this.size = arr.length;
     }
 
+    /**
+     * Add two Num Object and return the value
+     * @param a first Num
+     * @param b second Num
+     * @return sum of the two Num
+     */
     public static Num add(Num a, Num b) {
 
         StringBuilder sb = new StringBuilder();
@@ -82,6 +102,12 @@ public class Num  implements Comparable<Num> {
         return addition;
     }
 
+    /**
+     * Add two Num Object and return the value without considering the sign of the number
+     * @param a first Num
+     * @param b second Num
+     * @return sum of the two Num
+     */
     public static Num addWithNoSign(Num a, Num b) {
         long[] arr = new long[a.size() > b.size() ? a.size() + 1: b.size() + 1];
         int i = 0, carry = 0;
@@ -102,6 +128,12 @@ public class Num  implements Comparable<Num> {
         return new Num(arr, a.base(), false);
     }
 
+    /**
+     * Calculate difference of two Num Object and return the value
+     * @param a first Num
+     * @param b second Num
+     * @return difference of the two Num
+     */
     public static Num subtract(Num a, Num b) {
         StringBuilder sb = new StringBuilder();
         Num val = null;
@@ -159,7 +191,17 @@ public class Num  implements Comparable<Num> {
 
     // Use divide and conquer
     public static Num power(Num a, long n) {
-        return null;
+        if(n < 0) {
+            throw new ArithmeticException("Negative exponent");
+        }
+        if(n == 0)
+            return new Num(0);
+        if(n == 1)
+            return a;
+        else if(n%2 == 0)
+            return product(power(a, n/2), power(a, n/2));
+        else
+            return product(a, product(power(a, n/2), power(a, n/2)));
     }
 
     // Use binary search to calculate a/b
@@ -174,6 +216,9 @@ public class Num  implements Comparable<Num> {
 
     // Use binary search
     public static Num squareRoot(Num a) {
+        if(a == null) return null;
+        if(a.isNegative) return null;
+
         return null;
     }
 
@@ -240,8 +285,10 @@ public class Num  implements Comparable<Num> {
         return sb.toString();
     }
 
+    // Return the base on which the number is stored
     public long base() { return base; }
 
+    // Return the size of the array in which number is stored
     public int size() { return size; }
 
     // Return number equal to "this" number, in base=newBase
