@@ -47,10 +47,10 @@ public class Num  implements Comparable<Num> {
             this.isNegative = true;
             x = x * -1;
         }
-        this.size = (int) Math.ceil(Math.log10(x)/Math.log10(defaultBase));
+        this.size = (int) Math.ceil(Math.log10(x)/Math.log10(defaultBase-1));
         this.arr = new long[size];
         int i = 0;
-        while(x % defaultBase > 0) {
+        while((x == defaultBase-1)  || (x % (defaultBase-1) > 0)) {
             arr[i] = x % defaultBase;
             x /= defaultBase;
             i++;
@@ -119,7 +119,6 @@ public class Num  implements Comparable<Num> {
             if(i < b.size())
                 temp += b.arr[i];
             arr[i] = temp % a.base();
-            System.out.println(i + "  " + arr[i]);
             carry = temp >= a.base() ? (int) ( temp / a.base()) : 0;
             i++;
         }
@@ -398,7 +397,7 @@ public class Num  implements Comparable<Num> {
         System.out.println("Modulus: 6");
         System.out.println("Square Root: 7");
         System.out.println("Compare: 8");
-        System.out.println("Change Base: 9 <base>");
+//        System.out.println("Change Base: 9 <base>");
         System.out.println("Print Number (as List): 10");
         System.out.println("Print Number (as string): 11");
         System.out.println("Evaluate Infix: 12");
@@ -437,7 +436,7 @@ public class Num  implements Comparable<Num> {
 //                case 9: // Num raised to another Number
 //                	long convert2Base = in.nextLong();
 //                	num1.base = convert2Base;
-//                    System.out.println(num1 + " after changing base: " + num1.convertBase(num1));
+//                    System.out.println(num1 + " after changing base: " + num1.convertBase(convert2Base));
 //                    break;
                 case 10: // Printing Num as List
                     num1.printList();
