@@ -9,7 +9,7 @@ import java.util.*;
 
 public class Num  implements Comparable<Num> {
 
-    static long defaultBase = 10;  // Change as neede
+    static long defaultBase = 1000;  // Change as neede
     long base = defaultBase;  // Change as needed
     long[] arr;  // array to store arbitrarily large integers
     boolean isNegative;  // boolean flag to represent negative numbers
@@ -50,7 +50,7 @@ public class Num  implements Comparable<Num> {
         this.size = (int) Math.ceil(Math.log10(x)/Math.log10(defaultBase-1));
         this.arr = new long[size];
         int i = 0;
-        while((x == defaultBase-1)  || (x % (defaultBase-1) > 0)) {
+        while(x > 0) {
             arr[i] = x % defaultBase;
             x /= defaultBase;
             i++;
@@ -200,7 +200,7 @@ public class Num  implements Comparable<Num> {
     			res[a.arr.length]= carry;
     		}
     		productList.add(rightShiftBy(res, i));
-    		System.out.println(i);
+//    		System.out.println(i);
     	}
     	int index = 1;
     	boolean isNeg = false;
@@ -221,7 +221,7 @@ public class Num  implements Comparable<Num> {
     
     //shifting array to manage least significant digit in multiplication.
     public static long[] rightShiftBy(long[] arr, int times) {
-    	System.out.println("times" + times);
+//    	System.out.println("times" + times);
     	long[] res = new long[arr.length + times];
     		for(int i = arr.length-1; i>=0; i--) {
     			res[i+times] = arr[i];
@@ -388,13 +388,17 @@ public class Num  implements Comparable<Num> {
      */
     public String toString() {
         StringBuilder sb = new StringBuilder();
+        int index = 0;
         if(isNegative) {
             sb.append("-");
+            index = 1;
         }
         Num temp = convertBase(10);
         for(int i = temp.size()-1; i >=0; i--) {
-            if(!(i == size-1 && arr[i] == 0))
-                sb.append(temp.arr[i]);
+            sb.append(temp.arr[i]);
+        }
+        while(sb.charAt(index) == '0') {
+            sb.deleteCharAt(index);
         }
         return sb.toString();
     }
@@ -481,7 +485,7 @@ public class Num  implements Comparable<Num> {
             case "%":
                 result = mod(value1, value2);
                 break;
-            //TODO: Hadle case "^":
+            //TODO: Handle case "^":
             default:
                 break;
         }
@@ -567,8 +571,8 @@ public class Num  implements Comparable<Num> {
     public static void main(String[] args) {
 
         Scanner in = new Scanner(System.in);
-        Num num1 = new Num(1000);
-        Num num2 = new Num(125);
+        Num num1 = new Num(100);
+        Num num2 = new Num(525);
         System.out.println("--------Menu Options Usage--------");
         System.out.println("Add: 1 <x>");
         System.out.println("Subtract: 2");
@@ -578,7 +582,7 @@ public class Num  implements Comparable<Num> {
         System.out.println("Modulus: 6");
         System.out.println("Square Root: 7");
         System.out.println("Compare: 8");
-//        System.out.println("Change Base: 9 <base>");
+        System.out.println("Change Base: 9 <base>");
         System.out.println("Print Number (as List): 10");
         System.out.println("Print Number (as string): 11");
         System.out.println("Evaluate Infix: 12");
