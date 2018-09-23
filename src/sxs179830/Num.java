@@ -47,13 +47,19 @@ public class Num  implements Comparable<Num> {
             this.isNegative = true;
             x = x * -1;
         }
-        this.size = (int) Math.ceil(Math.log10(x)/Math.log10(defaultBase-1));
-        this.arr = new long[size];
-        int i = 0;
-        while(x > 0) {
-            arr[i] = x % defaultBase;
-            x /= defaultBase;
-            i++;
+        if(x == 0) {
+            this.size = 1;
+            this.arr = new long[this.size];
+            this.arr[0] = 0;
+        } else {
+            this.size = (int) Math.ceil(Math.log10(x) / Math.log10(defaultBase - 1));
+            this.arr = new long[size];
+            int i = 0;
+            while (x > 0) {
+                arr[i] = x % defaultBase;
+                x /= defaultBase;
+                i++;
+            }
         }
     }
 
@@ -571,6 +577,7 @@ public class Num  implements Comparable<Num> {
     public static void main(String[] args) {
 
         Scanner in = new Scanner(System.in);
+        new Num(0).printList();
         Num num1 = new Num(100);
         Num num2 = new Num(525);
         System.out.println("--------Menu Options Usage--------");
