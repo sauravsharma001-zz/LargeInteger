@@ -85,16 +85,17 @@ public class Num  implements Comparable<Num> {
             if(a.isNegative) {
                 a.isNegative = false;
                 addition = subtract(a, b);
-                addition.isNegative = true;
+                addition.isNegative = a.compareTo(b) > 0 ? true : false ;
                 a.isNegative = true;
             }
             else {
                 b.isNegative = false;
                 addition = subtract(a, b);
+                addition.isNegative = a.compareTo(b) > 0 ? false : true;
                 b.isNegative = true;
             }
         } else {
-           addition = addWithNoSign(a, b);
+            addition = addWithNoSign(a, b);
             // If both are negative then add '-' in front
             if(a.isNegative)
                 addition.isNegative = true;
@@ -185,52 +186,52 @@ public class Num  implements Comparable<Num> {
     }
     //method to find product of two number of type Num
     public static Num product(Num a, Num b) {
-    	//productList has list of individual multiplication value.
-    	List<long[]> productList = new ArrayList<long[]>();
-    	for(int i = 0; i< b.arr.length; i++) {
-    		long carry =0;
-    		long[] res = new long[a.arr.length + 1];
-    		for(int j = 0; j< a.arr.length; j++) {
-    			long product = b.arr[i] * a.arr[j];
-    			product += carry;
-    			carry = product / a.base;  
-    			res[j] = product % a.base;
-    		}
-    		if(carry !=0) {
-    			res[a.arr.length]= carry;
-    		}
-    		productList.add(rightShiftBy(res, i));
+        //productList has list of individual multiplication value.
+        List<long[]> productList = new ArrayList<long[]>();
+        for(int i = 0; i< b.arr.length; i++) {
+            long carry =0;
+            long[] res = new long[a.arr.length + 1];
+            for(int j = 0; j< a.arr.length; j++) {
+                long product = b.arr[i] * a.arr[j];
+                product += carry;
+                carry = product / a.base;
+                res[j] = product % a.base;
+            }
+            if(carry !=0) {
+                res[a.arr.length]= carry;
+            }
+            productList.add(rightShiftBy(res, i));
 //    		System.out.println(i);
-    	}
-    	int index = 1;
-    	boolean isNeg = false;
-    	if(a.isNegative == b.isNegative) {
-    		isNeg = false;
-    	}else {
-    		isNeg = true;
-    	}
-    	Num finalResult = new Num(productList.get(0), a.base, isNeg);
-    	//add all elements of productList
-    	while(index < productList.size()) {
-    		Num nextToAdd = new Num(productList.get(index), a.base, isNeg);
-    		finalResult = add(finalResult, nextToAdd);
-    		index++;
-    	}
+        }
+        int index = 1;
+        boolean isNeg = false;
+        if(a.isNegative == b.isNegative) {
+            isNeg = false;
+        }else {
+            isNeg = true;
+        }
+        Num finalResult = new Num(productList.get(0), a.base, isNeg);
+        //add all elements of productList
+        while(index < productList.size()) {
+            Num nextToAdd = new Num(productList.get(index), a.base, isNeg);
+            finalResult = add(finalResult, nextToAdd);
+            index++;
+        }
         return finalResult;
     }
-    
+
     //shifting array to manage least significant digit in multiplication.
     public static long[] rightShiftBy(long[] arr, int times) {
 //    	System.out.println("times" + times);
-    	long[] res = new long[arr.length + times];
-    		for(int i = arr.length-1; i>=0; i--) {
-    			res[i+times] = arr[i];
-    		}
-    		while(times > 0) {
-    			res[times] = 0;
-    			times--;
-    		}
-   	return res;
+        long[] res = new long[arr.length + times];
+        for(int i = arr.length-1; i>=0; i--) {
+            res[i+times] = arr[i];
+        }
+        while(times > 0) {
+            res[times] = 0;
+            times--;
+        }
+        return res;
     }
 
     /**
@@ -255,48 +256,48 @@ public class Num  implements Comparable<Num> {
 
     // Use binary search to calculate a/b
     public static Num divide(Num a, Num b) {
-    	long quotient;
-    	boolean isResultNeg = false;
-    	int i = a.compareTo(b);
-    	if(i == -1) {
-    		quotient = 0;
-    	}
-    	else if(b.arr.length == 0) {
-    		return null;	
-    	}
-    	else {
-    		quotient = 0;
-    		while(true) {
-    			Num res = subtract(a, b);
-    			if(res.compareTo(b) >= 0) {
-    				a = res;
-    			}else {break;}
-    			
-    			quotient++;
-    		}
-    	}
-    	
-    	if(a.isNegative == b.isNegative) {
-    		isResultNeg = false;
-    	}else {
-    		isResultNeg = false;
-    	}
-    	
-    	Num result = new Num(quotient);
-    	result.isNegative = isResultNeg;
+        long quotient;
+        boolean isResultNeg = false;
+        int i = a.compareTo(b);
+        if(i == -1) {
+            quotient = 0;
+        }
+        else if(b.arr.length == 0) {
+            return null;
+        }
+        else {
+            quotient = 0;
+            while(true) {
+                Num res = subtract(a, b);
+                if(res.compareTo(b) >= 0) {
+                    a = res;
+                }else {break;}
+
+                quotient++;
+            }
+        }
+
+        if(a.isNegative == b.isNegative) {
+            isResultNeg = false;
+        }else {
+            isResultNeg = false;
+        }
+
+        Num result = new Num(quotient);
+        result.isNegative = isResultNeg;
         return  result;
     }
 
     // return a%b
     public static Num mod(Num a, Num b) {
-    	while(true) {
-			Num res = subtract(a, b);
-			if(res.compareTo(b) > 0) {
-				a = res;
-			}else {
-				return res;
-			}
-		}
+        while(true) {
+            Num res = subtract(a, b);
+            if(res.compareTo(b) > 0) {
+                a = res;
+            }else {
+                return res;
+            }
+        }
     }
 
     /**
@@ -322,7 +323,7 @@ public class Num  implements Comparable<Num> {
                 start = Num.add(mid, new Num(1));
                 ans = mid;
             } else {
-               end = Num.subtract(mid, new Num(1));
+                end = Num.subtract(mid, new Num(1));
             }
         }
         return ans;
@@ -423,7 +424,7 @@ public class Num  implements Comparable<Num> {
 //        }
         return this;
     }
-    
+
 //
 //    public long[] convertBase(Num num) {
 //    	long[] covertedNum;
@@ -438,19 +439,19 @@ public class Num  implements Comparable<Num> {
 //    	}
 //    	return covertedNum;
 //    }
-    
+
     public long changeBase(long number, long fromBase, long toBase) {
-            long convertedNumber = 0;
-            long nextLong;
-            int i = 0;
-            while (number != 0) {
-            	nextLong = number  % toBase;
-            	convertedNumber = (long) (convertedNumber + nextLong * Math.pow(fromBase, i));
-                number = number / 10;
-                i++;
-            }
-            return convertedNumber;
-        }    	
+        long convertedNumber = 0;
+        long nextLong;
+        int i = 0;
+        while (number != 0) {
+            nextLong = number  % toBase;
+            convertedNumber = (long) (convertedNumber + nextLong * Math.pow(fromBase, i));
+            number = number / 10;
+            i++;
+        }
+        return convertedNumber;
+    }
 
     /**
      * Divide by 2, for using in binary search
@@ -467,7 +468,14 @@ public class Num  implements Comparable<Num> {
         return new Num(result, this.base(), this.isNegative);
     }
 
-    public static Num performOperation(String operator, Num value1, Num value2) {
+    /**
+     * Calculate difference of two Num Object and return the value
+     * @param operator The operation to be done
+     * @param value2 First operand
+     * @param value1 Second operand
+     * @return Result of operation on the two operands
+     */
+    public static Num performOperation(String operator, Num value2, Num value1) {
         Num result = null;
         switch (operator) {
             case "*":
@@ -485,7 +493,9 @@ public class Num  implements Comparable<Num> {
             case "%":
                 result = mod(value1, value2);
                 break;
-            //TODO: Handle case "^":
+            case "^":
+                result = power(value1,Long.valueOf(value2.toString()));
+                break;
             default:
                 break;
         }
@@ -514,11 +524,16 @@ public class Num  implements Comparable<Num> {
         return result;
     }
 
-    public static boolean hasPrecedence(String op1, String op2)
+    /**
+     * Compare braces with other operators
+     * @param op1 operator1
+     * @param op2 operator2
+     * @return  return true if op2 has high or equal priority than op1, else false
+     */    public static boolean hasPrecedence(String op1, String op2)
     {
         if (op2.equals("(") || op2.equals(")"))
             return false;
-        if ((op1.equals("*") || (op1.equals("/")) && (op2.equals("+") || op2.equals("-"))))
+        if ((op1.equals("*") || (op1.equals("/") || op1.equals("^")) && (op2.equals("+") || op2.equals("-"))))
             return false;
         else
             return true;
@@ -629,14 +644,14 @@ public class Num  implements Comparable<Num> {
                 case 11: // Printing Num as String
                     System.out.println(num1);
                     break;
-                case 12: // Infix Evaluation
-                    Num res = evaluateInfix(new String[]{"(","10","+","3",")","+","2"});
+                case 12: // Infix Evaluation ( 1 + ( ( 2 + 3 ) * ( 4 * 5 ) ) ) = 101
+                    Num res = evaluateInfix(new String[]{"(", "1", "+", "(", "(", "2", "+", "3", ")", "%", "(", "4", "*", "5", ")", ")", ")"});
                     System.out.println(res.toString().replaceFirst("^0+(?!$)", ""));
                     break;
 
                 case 13: // Postfix Evaluation
-                    // TODO: Sum of nums with a negative sign returning wrong sign
-                    Num result = evaluatePostfix(new String[]{"101","-99","+"});
+                    //TODO: mod operation incomplete
+                    Num result = evaluatePostfix(new String[]{"5","20","%"});
                     System.out.println(result.toString().replaceFirst("^0+(?!$)", ""));
                     break;
                 default: // Exit loop
