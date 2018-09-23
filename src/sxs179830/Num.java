@@ -9,8 +9,8 @@ import java.util.*;
 
 public class Num  implements Comparable<Num> {
 
-    static long defaultBase = 1000;  // Change as needed
-    long base = 1000;  // Change as needed
+    static long defaultBase = 10;  // Change as neede
+    long base = defaultBase;  // Change as needed
     long[] arr;  // array to store arbitrarily large integers
     boolean isNegative;  // boolean flag to represent negative numbers
     int size;  // actual number of elements of array that are used;  number is stored in arr[0..len-1]
@@ -183,9 +183,54 @@ public class Num  implements Comparable<Num> {
         }
         return val;
     }
-
+    //method to find product of two number of type Num
     public static Num product(Num a, Num b) {
-        return null;
+    	//productList has list of individual multiplication value.
+    	List<long[]> productList = new ArrayList<long[]>();
+    	for(int i = 0; i< b.arr.length; i++) {
+    		long carry =0;
+    		long[] res = new long[a.arr.length + 1];
+    		for(int j = 0; j< a.arr.length; j++) {
+    			long product = b.arr[i] * a.arr[j];
+    			product += carry;
+    			carry = product / a.base;  
+    			res[j] = product % a.base;
+    		}
+    		if(carry !=0) {
+    			res[a.arr.length]= carry;
+    		}
+    		productList.add(rightShiftBy(res, i));
+    		System.out.println(i);
+    	}
+    	int index = 1;
+    	boolean isNeg = false;
+    	if(a.isNegative == b.isNegative) {
+    		isNeg = false;
+    	}else {
+    		isNeg = true;
+    	}
+    	Num finalResult = new Num(productList.get(0), a.base, isNeg);
+    	//add all elements of productList
+    	while(index < productList.size()) {
+    		Num nextToAdd = new Num(productList.get(index), a.base, isNeg);
+    		finalResult = add(finalResult, nextToAdd);
+    		index++;
+    	}
+        return finalResult;
+    }
+    
+    //shifting array to manage least significant digit in multiplication.
+    public static long[] rightShiftBy(long[] arr, int times) {
+    	System.out.println("times" + times);
+    	long[] res = new long[arr.length + times];
+    		for(int i = arr.length-1; i>=0; i--) {
+    			res[i+times] = arr[i];
+    		}
+    		while(times > 0) {
+    			res[times] = 0;
+    			times--;
+    		}
+   	return res;
     }
 
     /**
@@ -523,7 +568,7 @@ public class Num  implements Comparable<Num> {
 
         Scanner in = new Scanner(System.in);
         Num num1 = new Num(1000);
-        Num num2 = new Num("123456789012");
+        Num num2 = new Num(125);
         System.out.println("--------Menu Options Usage--------");
         System.out.println("Add: 1 <x>");
         System.out.println("Subtract: 2");
