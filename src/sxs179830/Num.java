@@ -188,7 +188,12 @@ public class Num  implements Comparable<Num> {
         return null;
     }
 
-    // Use divide and conquer
+    /**
+     * Use divide and conquer
+     * @param a given num value
+     * @param n given exponent
+     * @return return num value for a raised to n
+     */
     public static Num power(Num a, long n) {
         if(n < 0) {
             throw new ArithmeticException("Negative exponent");
@@ -249,7 +254,11 @@ public class Num  implements Comparable<Num> {
 		}
     }
 
-    // Use binary search
+    /**
+     * Use binary search
+     * @param a given number
+     * @return square root of the given number
+     */
     public static Num squareRoot(Num a) {
         if(a == null) return null;
         if(a.isNegative) return null;
@@ -257,9 +266,12 @@ public class Num  implements Comparable<Num> {
         return null;
     }
 
-
-    // Utility functions
-    // compare "this" to "other": return +1 if this is greater, 0 if equal, -1 otherwise
+    /**
+     * Utility functions
+     * compare "this" to "other": return +1 if this is greater, 0 if equal, -1 otherwise
+     * @param other value to compare with
+     * @return +1 if this is greater, 0 if equal, -1 otherwise
+     */
     public int compareTo(Num other) {
         if(this.isNegative ^ other.isNegative) {
             return this.isNegative ? -1 : 1;
@@ -287,9 +299,11 @@ public class Num  implements Comparable<Num> {
         return -1;
     }
 
-    // Output using the format "base: elements of list ..."
-    // For example, if base=100, and the number stored corresponds to 10965,
-    // then the output is "100: 65 9 1"
+    /**
+     * Output using the format "base: elements of list ..."
+     * For example, if base=100, and the number stored corresponds to 10965,
+     * then the output is "100: 65 9 1"
+     */
     public void printList() {
         System.out.print(base + ": ");
         StringBuilder res = new StringBuilder();
@@ -306,7 +320,10 @@ public class Num  implements Comparable<Num> {
         System.out.println(res);
     }
 
-    // Return number to a string in base 10
+    /**
+     * Return number to a string in base 10
+     * @return String value of the number
+     */
     public String toString() {
         StringBuilder sb = new StringBuilder();
         if(isNegative) {
@@ -320,10 +337,16 @@ public class Num  implements Comparable<Num> {
         return sb.toString();
     }
 
-    // Return the base on which the number is stored
+    /**
+     * Return the base on which the number is stored
+     * @return the base on which number is stored
+     */
     public long base() { return base; }
 
-    // Return the size of the array in which number is stored
+    /**
+     * Return the size of the array in which number is stored
+     * @return size of the array
+     */
     public int size() { return size; }
 
     // Return number equal to "this" number, in base=newBase
@@ -363,7 +386,10 @@ public class Num  implements Comparable<Num> {
             return convertedNumber;
         }    	
 
-    // Divide by 2, for using in binary search
+    /**
+     * Divide by 2, for using in binary search
+     * @return num divided by 2
+     */
     public Num by2() {
         long[] result = new long[this.size()];
         int i = this.size()-1, carry = 0;
@@ -375,16 +401,24 @@ public class Num  implements Comparable<Num> {
         return new Num(result, this.base(), this.isNegative);
     }
 
-    // Evaluate an expression in postfix and return resulting number
-    // Each string is one of: "*", "+", "-", "/", "%", "^", "0", or
-    // a number: [1-9][0-9]*.  There is no unary minus operator.
+    /**
+     * Evaluate an expression in postfix and return resulting number
+     * Each string is one of: "*", "+", "-", "/", "%", "^", "0", or
+     * a number: [1-9][0-9]*.  There is no unary minus operator.
+     * @param expr given postfix expression in array of String
+     * @return evaluate value for the given postfix expression
+     */
     public static Num evaluatePostfix(String[] expr) {
         return null;
     }
 
-    // Evaluate an expression in infix and return resulting number
-    // Each string is one of: "*", "+", "-", "/", "%", "^", "(", ")", "0", or
-    // a number: [1-9][0-9]*.  There is no unary minus operator.
+    /**
+     * Evaluate an expression in infix and return resulting number
+     * Each string is one of: "*", "+", "-", "/", "%", "^", "(", ")", "0", or
+     * a number: [1-9][0-9]*.  There is no unary minus operator.
+     * @param expr given infix expression in array of String
+     * @return evaluate value for the given infix expression
+     */
     public static Num evaluateInfix(String[] expr) {
         return null;
     }
