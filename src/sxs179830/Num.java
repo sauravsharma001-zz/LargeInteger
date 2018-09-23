@@ -365,7 +365,14 @@ public class Num  implements Comparable<Num> {
 
     // Divide by 2, for using in binary search
     public Num by2() {
-        return null;
+        long[] result = new long[this.size()];
+        int i = this.size()-1, carry = 0;
+        while(i >= 0) {
+            result[i] = (int) Math.floor((carry * this.base() + this.arr[i]) / 2);
+            carry = this.arr[i] % 2 == 0 ? 0 : 1;
+            i--;
+        }
+        return new Num(result, this.base(), this.isNegative);
     }
 
     // Evaluate an expression in postfix and return resulting number
@@ -387,7 +394,7 @@ public class Num  implements Comparable<Num> {
 
         Scanner in = new Scanner(System.in);
         Num num1 = new Num(1000);
-        Num num2 = new Num("51245");
+        Num num2 = new Num("123456789012");
         System.out.println("--------Menu Options Usage--------");
         System.out.println("Add: 1 <x>");
         System.out.println("Subtract: 2");
