@@ -10,7 +10,7 @@ import java.util.*;
 
 public class Num  implements Comparable<Num> {
 
-    static long defaultBase = 10;  // Change as neede
+    static long defaultBase = 1000;  // Change as neede
     long base = defaultBase;  // Change as needed
     long[] arr;  // array to store arbitrarily large integers
     boolean isNegative;  // boolean flag to represent negative numbers
@@ -202,7 +202,13 @@ public class Num  implements Comparable<Num> {
         }
         return val;
     }
-    //method to find product of two number of type Num
+
+    /**
+     * Multiply two Num Object and return the value without considering the sign of the number
+     * @param a first Num
+     * @param b second Num
+     * @return product of the two Num
+     */
     public static Num product(Num a, Num b) {
         //productList has list of individual multiplication value.
         List<long[]> productList = new ArrayList<long[]>();
@@ -237,7 +243,12 @@ public class Num  implements Comparable<Num> {
         return finalResult;
     }
 
-    //shifting array to manage least significant digit in multiplication.
+    /**
+     * shifting array to manage least significant digit in multiplication.
+     * @param arr original array
+     * @param times time to be shifted
+     * @return update long[]
+     */
     public static long[] rightShiftBy(long[] arr, int times) {
 //    	System.out.println("times" + times);
         long[] res = new long[arr.length + times];
@@ -252,7 +263,7 @@ public class Num  implements Comparable<Num> {
     }
 
     /**
-     * Use divide and conquer
+     * Using divide and conquer, power is calculated
      * @param a given num value
      * @param n given exponent
      * @return return num value for a raised to n
@@ -271,7 +282,12 @@ public class Num  implements Comparable<Num> {
             return product(a, product(power(a, n/2), power(a, n/2)));
     }
 
-    // Use binary search to calculate a/b
+    /**
+     * Division between two Num Object and return the value without considering the sign of the number
+     * @param a first Num
+     * @param b second Num
+     * @return dividend
+     */
     public static Num divide(Num a, Num b) {
         boolean isNeg = false;
         if(a.isNegative == b.isNegative) {
@@ -292,9 +308,10 @@ public class Num  implements Comparable<Num> {
             Num minValue = new Num("0");
             Num maxValue = new Num(a.arr, a.base, false);
             Num temp = add(minValue,maxValue).by2();
+            Num ans = null;
             Num prodRes;
-            int comparision, i =10;
-        	while(minValue.compareTo(maxValue) < 0 && i > 0) {
+            int comparision;
+        	while(minValue.compareTo(maxValue) < 0) {
                 temp = add(minValue,maxValue).by2();
                 prodRes = product(temp, b);
                 comparision = prodRes.compareTo(a);
@@ -302,13 +319,13 @@ public class Num  implements Comparable<Num> {
         			return temp;
         		} else if(comparision == -1) {
         			minValue = temp;
+        			ans = temp;
         		} else {
         			maxValue = temp;
         		}
-        		i--;
         	}
+        	return ans;
         }
-        return null;
     }
 
     // return a%b
@@ -335,14 +352,15 @@ public class Num  implements Comparable<Num> {
 
         Num start = new Num(2);
         Num end = a.by2();
-        Num mid, ans = null;
+        Num mid, oldMid = null, ans = null;
         int comp;
+        sqrt_loop:
         while(start.compareTo(end) < 0) {
-            System.out.println(start + "  " + end + "  " + start.compareTo(end));
             mid = Num.add(start, end).by2();
             comp = Num.product(mid, mid).compareTo(a);
-            System.out.println(mid + "  " + Num.product(mid, mid) + "   " + comp);
-            if(comp == 0) {
+            if(mid.equals(oldMid)){
+                break sqrt_loop;
+            } else if(comp == 0) {
                 return mid;
             } else if(comp < 0) {
                 start = mid;
@@ -350,6 +368,7 @@ public class Num  implements Comparable<Num> {
             } else {
                 end = mid;
             }
+            oldMid = mid;
         }
         return ans;
     }
@@ -439,6 +458,19 @@ public class Num  implements Comparable<Num> {
      * @return size of the array
      */
     public int size() { return size; }
+
+
+    /**
+     * @param b Object of Num Class to compare with
+     * @return true if both Num object stores same number else returns false
+     */
+    public boolean equals(Num b) {
+        if(b == this)  return true;
+        if(b == null) return false;
+
+        return this.toString().equals(b.toString());
+    }
+
 
     // Return number equal to "this" number, in base=newBase
     public Num convertBase(int newBase) {
@@ -610,78 +642,76 @@ public class Num  implements Comparable<Num> {
     public static void main(String[] args) {
 
         Scanner in = new Scanner(System.in);
-        Num num1 = new Num(11);
+        Num num1 = new Num(131412);
         Num num2 = new Num(100);
-        System.out.println(Num.squareRoot(num1));
-//        System.out.println("--------Menu Options Usage--------");
-//        System.out.println("Add: 1 <x>");
-//        System.out.println("Subtract: 2");
-//        System.out.println("Product: 3 <x>");
-//        System.out.println("Divide: 4");
-//        System.out.println("Power: 5 <val>");
-//        System.out.println("Modulus: 6");
-//        System.out.println("Square Root: 7");
-//        System.out.println("Compare: 8");
-//        System.out.println("Change Base: 9 <base>");
-//        System.out.println("Print Number (as List): 10");
-//        System.out.println("Print Number (as string): 11");
-//        System.out.println("Evaluate Infix: 12");
-//        System.out.println("Evaluate Postfix: 13");
-//        System.out.println("Exit: 14");
-//        System.out.println("----------------------------");
-//
-//        while_loop:
-//        while (in.hasNext()) {
-//            int com = in.nextInt();
-//            switch (com) {
-//                case 1: // Add two Number.
-//                    System.out.println("Adding " + num1 + " & " + num2 + ": " + Num.add(num1, num2));
-//                    break;
-//                case 2: // Subtract two Number
-//                    System.out.println("Subtracting " + num1 + " from " + num2 + ": " + Num.subtract(num1, num2));
-//                    break;
-//                case 3: // Multiplying two Number
-//                    System.out.println("Multiplying " + num1 + " & " + num2 + ": " + Num.product(num1, num2));
-//                    break;
-//                case 4: // Division of two Number
-//                    System.out.println("Dividing " + num1 + " by " + num2 + ": " + Num.divide(num1, num2));
-//                    break;
-//                case 5: // Num raised to another Number
-//                    System.out.println(num1 + " raised to " + num2 + ": " + Num.power(num1, in.nextLong()));
-//                    break;
-//                case 6: // modulus of two number
-//                    System.out.println(num1 + " % " + num2 + ": " + Num.mod(num1, num2));
-//                    break;
-//                case 7: // Sqrt of Number
-//                    System.out.println("Square root of " + num1 + ": " + Num.squareRoot(num1));
-//                    break;
-//                case 8: // Division of two Number
-//                    System.out.println("Dividing " + num1 + " by " + num2 + ": " + Num.divide(num1, num2));
-//                    break;
-////                case 9: // Num raised to another Number
-////                	long convert2Base = in.nextLong();
-////                	num1.base = convert2Base;
-////                    System.out.println(num1 + " after changing base: " + num1.convertBase(convert2Base));
-////                    break;
-//                case 10: // Printing Num as List
-//                    num1.printList();
-//                    break;
-//                case 11: // Printing Num as String
-//                    System.out.println(num1);
-//                    break;
-//                case 12: // Infix Evaluation ( 1 + ( ( 2 + 3 ) * ( 4 * 5 ) ) ) = 101
-//                    Num res = evaluateInfix(new String[]{"(", "1", "+", "(", "(", "2", "+", "3", ")", "%", "(", "4", "*", "5", ")", ")", ")"});
-//                    System.out.println(res.toString().replaceFirst("^0+(?!$)", ""));
-//                    break;
-//
-//                case 13: // Postfix Evaluation
-//                    //TODO: mod operation incomplete
-//                    Num result = evaluatePostfix(new String[]{"5","20","%"});
-//                    System.out.println(result.toString().replaceFirst("^0+(?!$)", ""));
-//                    break;
-//                default: // Exit loop
-//                    break while_loop;
-//            }
-//        }
+        System.out.println("--------Menu Options Usage--------");
+        System.out.println("Add: 1 <x>");
+        System.out.println("Subtract: 2");
+        System.out.println("Product: 3 <x>");
+        System.out.println("Divide: 4");
+        System.out.println("Power: 5 <val>");
+        System.out.println("Modulus: 6");
+        System.out.println("Square Root: 7");
+        System.out.println("Compare: 8");
+        System.out.println("Change Base: 9 <base>");
+        System.out.println("Print Number (as List): 10");
+        System.out.println("Print Number (as string): 11");
+        System.out.println("Evaluate Infix: 12");
+        System.out.println("Evaluate Postfix: 13");
+        System.out.println("Exit: 14");
+        System.out.println("----------------------------");
+
+        while_loop:
+        while (in.hasNext()) {
+            int com = in.nextInt();
+            switch (com) {
+                case 1: // Add two Number.
+                    System.out.println("Adding " + num1 + " & " + num2 + ": " + Num.add(num1, num2));
+                    break;
+                case 2: // Subtract two Number
+                    System.out.println("Subtracting " + num1 + " from " + num2 + ": " + Num.subtract(num1, num2));
+                    break;
+                case 3: // Multiplying two Number
+                    System.out.println("Multiplying " + num1 + " & " + num2 + ": " + Num.product(num1, num2));
+                    break;
+                case 4: // Division of two Number
+                    System.out.println("Dividing " + num1 + " by " + num2 + ": " + Num.divide(num1, num2));
+                    break;
+                case 5: // Num raised to another Number
+                    long power = in.nextLong();
+                    System.out.println(num1 + " raised to " + power + ": " + Num.power(num1, power));
+                    break;
+                case 6: // modulus of two number
+                    System.out.println(num1 + " % " + num2 + ": " + Num.mod(num1, num2));
+                    break;
+                case 7: // Sqrt of Number
+                    System.out.println("Square root of " + num1 + ": " + Num.squareRoot(num1));
+                    break;
+                case 8: // Comparing of two Number
+                    int c = num1.compareTo(num2);
+                    System.out.println("Out of " + num1 + " & " + num2 + ", " + (c == 1 ? num1 + " is bigger." :  ( c == -1 ? num2 + " is bigger." : " both are same")));
+                    break;
+                case 9: // Num raised to another Number
+                    int base = in.nextInt();
+                	System.out.println(num1 + " after changing base: " + num1.convertBase(base));
+                  break;
+                case 10: // Printing Num as List
+                    num1.printList();
+                    break;
+                case 11: // Printing Num as String
+                    System.out.println(num1);
+                    break;
+                case 12: // Infix Evaluation ( 1 + ( ( 2 + 3 ) * ( 4 * 5 ) ) ) = 101
+                    Num res = evaluateInfix(new String[]{"(", "1", "+", "(", "(", "2", "+", "3", ")", "%", "(", "4", "*", "5", ")", ")", ")"});
+                    System.out.println(res.toString().replaceFirst("^0+(?!$)", ""));
+                    break;
+                case 13: // Postfix Evaluation
+                    Num result = evaluatePostfix(new String[]{"5","20","%"});
+                    System.out.println(result.toString().replaceFirst("^0+(?!$)", ""));
+                    break;
+                default: // Exit loop
+                    break while_loop;
+            }
+        }
     }
 }
