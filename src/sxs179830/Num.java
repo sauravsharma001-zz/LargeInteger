@@ -469,11 +469,25 @@ public class Num  implements Comparable<Num> {
 
     // Return number equal to "this" number, in base=newBase
     public Num convertBase(int newBase) {
-//        while (n > 0) {
-//            nextDigit = n % newBase;  // write this into arr
-//            n = n / b;
-//        }
-        return this;
+        Num convertedNum = new Num(0);
+        this.base = (long)newBase;
+        String s = "";
+        int i = 0;
+        List<long[]> modList = new ArrayList<>();
+        if(this.base < this.defaultBase) {
+            while(this.compareTo(new Num(0)) > 0) {
+                Num nextNum = mod(this, new Num(this.base));
+                modList.add(nextNum.arr);
+                Num div = new Num(this.base);
+                this.arr = divide(this, div).arr;
+            }
+            Collections.reverse(modList);
+
+            for(long[] l : modList) {
+                s += Long.toString(l[0]);
+            }
+        }
+        return new Num(s);
     }
 
     public long changeBase(long number, long fromBase, long toBase) {
