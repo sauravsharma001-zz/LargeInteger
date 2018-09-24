@@ -330,14 +330,9 @@ public class Num  implements Comparable<Num> {
 
     // return a%b
     public static Num mod(Num a, Num b) {
-        while(true) {
-            Num res = subtract(a, b);
-            if(res.compareTo(b) > 0) {
-                a = res;
-            }else {
-                return res;
-            }
-        }
+        Num quotient = divide(a, b);
+        Num result = subtract(a, product(quotient, b));
+        return result;
     }
 
     /**
