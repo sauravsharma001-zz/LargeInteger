@@ -437,7 +437,7 @@ public class Num  implements Comparable<Num> {
             sb.append("-");
             index = 1;
         }
-        Num temp = convertBase(10);
+        Num temp = convertBaseToDecimal();
         for(int i = temp.size()-1; i >=0; i--) {
             sb.append(temp.arr[i]);
         }
@@ -481,21 +481,6 @@ public class Num  implements Comparable<Num> {
         return this;
     }
 
-//
-//    public long[] convertBase(Num num) {
-//    	long[] covertedNum;
-//    	if(num.defaultBase == num.base) {
-//    		covertedNum = num.arr;
-//    	}
-//    	else{
-//    		for(int i=0; i<num.arr.length; i++) {
-//    			//add your base conversion.
-//    			long number = changeBase(num.arr[i], num.defaultBase, num.base);
-//    		}
-//    	}
-//    	return covertedNum;
-//    }
-
     public long changeBase(long number, long fromBase, long toBase) {
         long convertedNumber = 0;
         long nextLong;
@@ -507,6 +492,23 @@ public class Num  implements Comparable<Num> {
             i++;
         }
         return convertedNumber;
+    }
+
+
+    public Num convertBaseToDecimal() {
+        if(this.base == 10) return this;
+        if(this == null) return null;
+
+        StringBuilder sb = new StringBuilder();
+        long carry = 0, tempDob;
+        Num temp;
+        Num result = new Num("0");
+        for(int i =0; i < this.size(); i++) {
+            tempDob = (this.arr[i] * (long) Math.pow(this.base, i);
+            temp = new Num(String.valueOf(tempDob));
+            result = Num.add(temp, result);
+        }
+        return result;
     }
 
     /**
