@@ -504,7 +504,7 @@ public class Num  implements Comparable<Num> {
         Num temp;
         Num result = new Num("0");
         for(int i =0; i < this.size(); i++) {
-            tempDob = (this.arr[i] * (long) Math.pow(this.base, i);
+            tempDob = (this.arr[i] * (long) Math.pow(this.base, i));
             temp = new Num(String.valueOf(tempDob));
             result = Num.add(temp, result);
         }
