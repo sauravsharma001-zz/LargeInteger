@@ -9,6 +9,8 @@ import java.util.*;
 
 import com.sun.corba.se.impl.oa.toa.TOA;
 
+
+
 public class Num  implements Comparable<Num> {
 
     static long defaultBase = 10;  // Change as neede
@@ -55,6 +57,7 @@ public class Num  implements Comparable<Num> {
             this.arr[0] = 0;
         } else {
             this.size = (int) Math.ceil(Math.log10(x) / Math.log10(defaultBase - 1));
+            if(this.size == 0) this.size = 1;
             this.arr = new long[size];
             int i = 0;
             while (x > 0) {
@@ -72,10 +75,20 @@ public class Num  implements Comparable<Num> {
      * @param isNegative represent the sign of number
      */
     public Num(long[] arr, long base, boolean isNegative) {
-        this.arr = arr;
+        int size = 0, t = 0;
+        for(int i = arr.length-1;  i > 0; i--) {
+            if(arr[i] == 0)
+                t++;
+            else
+                break;
+        }
+        this.size = arr.length - t;
+        this.arr = new long[this.size];
+        for(int k = 0; k < this.size; k++) {
+            this.arr[k] = arr[k];
+        }
         this.base = base;
         this.isNegative = isNegative;
-        this.size = arr.length;
     }
 
     /**
@@ -194,36 +207,36 @@ public class Num  implements Comparable<Num> {
     }
     //method to find product of two number of type Num
     public static Num product(Num a, Num b) {
-    	//productList has list of individual multiplication value.
-    	List<long[]> productList = new ArrayList<long[]>();
-    	for(int i = 0; i< b.arr.length; i++) {
-    		long carry =0;
-    		long[] res = new long[a.arr.length + 1];
-    		for(int j = 0; j< a.arr.length; j++) {
-    			long product = b.arr[i] * a.arr[j];
-    			product += carry;
-    			carry = product / a.base;  
-    			res[j] = product % a.base;
-    		}
-    		if(carry !=0) {
-    			res[a.arr.length]= carry;
-    		}
-    		productList.add(rightShiftBy(res, i));
-    	}
-    	int index = 1;
-    	boolean isNeg = false;
-    	if(a.isNegative == b.isNegative) {
-    		isNeg = false;
-    	}else {
-    		isNeg = true;
-    	}
-    	Num finalResult = new Num(productList.get(0), a.base, isNeg);
-    	//add all elements of productList
-    	while(index < productList.size()) {
-    		Num nextToAdd = new Num(productList.get(index), a.base, isNeg);
-    		finalResult = add(finalResult, nextToAdd);
-    		index++;
-    	}
+        //productList has list of individual multiplication value.
+        List<long[]> productList = new ArrayList<long[]>();
+        for(int i = 0; i< b.arr.length; i++) {
+            long carry =0;
+            long[] res = new long[a.arr.length + 1];
+            for(int j = 0; j< a.arr.length; j++) {
+                long product = b.arr[i] * a.arr[j];
+                product += carry;
+                carry = product / a.base;
+                res[j] = product % a.base;
+            }
+            if(carry !=0) {
+                res[a.arr.length]= carry;
+            }
+            productList.add(rightShiftBy(res, i));
+        }
+        int index = 1;
+        boolean isNeg = false;
+        if(a.isNegative == b.isNegative) {
+            isNeg = false;
+        }else {
+            isNeg = true;
+        }
+        Num finalResult = new Num(productList.get(0), a.base, isNeg);
+        //add all elements of productList
+        while(index < productList.size()) {
+            Num nextToAdd = new Num(productList.get(index), a.base, isNeg);
+            finalResult = add(finalResult, nextToAdd);
+            index++;
+        }
         return finalResult;
     }
 
@@ -235,8 +248,8 @@ public class Num  implements Comparable<Num> {
             res[i+times] = arr[i];
         }
         while(times > 0) {
-            res[times] = 0;
             times--;
+            res[times] = 0;
         }
         return res;
     }
@@ -263,40 +276,42 @@ public class Num  implements Comparable<Num> {
 
     // Use binary search to calculate a/b
     public static Num divide(Num a, Num b) {
-    	boolean isNeg = false;
-    	if(a.isNegative == b.isNegative) {
-    		isNeg = false;
-    	}else {
-    		isNeg = true;
-    	}
-    	if(a.compareTo(b) == -1) {
-    		return new Num(0);
-    	}
-    	else if(a.compareTo(b) == 0) {
-    		Num number = new Num(1);
-    		number.isNegative = isNeg;
-    		return number;
-    	}
-    	else {
-    		Num minValue = new Num("0");
-        	Num maxValue = new Num(a.arr, a.base, false);
-        	while(true) {        		
-        		Num temp = add(minValue,maxValue);
-        		temp = temp.by2();
-        		Num prodRes = product(temp, b);
-        		/* use this to debug.
-        		 * System.out.println(temp);
-        		System.out.println(prodRes.compareTo(a));*/
-        		
-        		if(prodRes.compareTo(a) == 0) {
+        boolean isNeg = false;
+        if(a.isNegative == b.isNegative) {
+            isNeg = false;
+        }else {
+            isNeg = true;
+        }
+        int c = a.compareTo(b);
+        if(c == -1) {
+            return new Num(0);
+        }
+        else if(c == 0) {
+            Num number = new Num(1);
+            number.isNegative = isNeg;
+            return number;
+        }
+        else {
+            Num minValue = new Num("0");
+            Num maxValue = new Num(a.arr, a.base, false);
+            Num temp = add(minValue,maxValue).by2();
+            Num prodRes;
+            int comparision, i =10;
+        	while(minValue.compareTo(maxValue) < 0 && i > 0) {
+                temp = add(minValue,maxValue).by2();
+                prodRes = product(temp, b);
+                comparision = prodRes.compareTo(a);
+        		if(comparision == 0) {
         			return temp;
-        		} else if(prodRes.compareTo(a) == -1) {
+        		} else if(comparision == -1) {
         			minValue = temp;
         		} else {
         			maxValue = temp;
         		}
+        		i--;
         	}
-    	}
+        }
+        return null;
     }
 
     // return a%b
@@ -369,7 +384,6 @@ public class Num  implements Comparable<Num> {
                 return this.isNegative ? flag*-1 : flag;
             }
         }
-        System.out.println("reas");
         return -1;
     }
 
@@ -409,7 +423,7 @@ public class Num  implements Comparable<Num> {
         for(int i = temp.size()-1; i >=0; i--) {
             sb.append(temp.arr[i]);
         }
-        while(sb.charAt(index) == '0') {
+        while(sb.charAt(index) == '0' && sb.length() > 1) {
             sb.deleteCharAt(index);
         }
         return sb.toString();
@@ -597,8 +611,8 @@ public class Num  implements Comparable<Num> {
     public static void main(String[] args) {
 
         Scanner in = new Scanner(System.in);
-        Num num1 = new Num(100);
-        Num num2 = new Num(525);
+        Num num1 = new Num(1000);
+        Num num2 = new Num(100);
         System.out.println("--------Menu Options Usage--------");
         System.out.println("Add: 1 <x>");
         System.out.println("Subtract: 2");
