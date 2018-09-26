@@ -582,6 +582,7 @@ public class Num  implements Comparable<Num> {
             String nextString = expr[i];
             if(operators.contains(nextString)) {
                 result = performOperation(nextString,new Num(operandStack.pop()),new Num(operandStack.pop()));
+                operandStack.push(result.toString());
             } else {
                 operandStack.push(nextString);
             }
