@@ -10,7 +10,7 @@ import java.util.*;
 
 public class Num  implements Comparable<Num> {
 
-    static long defaultBase = 1000;  // Change as neede
+    static long defaultBase = 1000;  // Change as needed
     long base = defaultBase;  // Change as needed
     long[] arr;  // array to store arbitrarily large integers
     boolean isNegative;  // boolean flag to represent negative numbers
@@ -385,7 +385,7 @@ public class Num  implements Comparable<Num> {
                 while(j >= 0) {
                     if(this.arr[j] == other.arr[j]) {
                         j--;
-                        if(j==0)
+                        if(j<=0)
                             return 0;
                     } else {
                         flag = this.arr[j] > other.arr[j] ? 1 : -1;
@@ -713,7 +713,7 @@ public class Num  implements Comparable<Num> {
                 case 11: // Printing Num as String
                     System.out.println(num1);
                     break;
-                case 12: // Infix Evaluation ( 1 + ( ( 2 + 3 ) * ( 4 * 5 ) ) ) = 101
+                case 12: // Infix Evaluation ( 1 + ( ( 2 + 3 ) % ( 4 * 5 ) ) ) = 12
                     Num res = evaluateInfix(new String[]{"(", "1", "+", "(", "(", "2", "+", "3", ")", "%", "(", "4", "*", "5", ")", ")", ")"});
                     System.out.println(res.toString().replaceFirst("^0+(?!$)", ""));
                     break;
