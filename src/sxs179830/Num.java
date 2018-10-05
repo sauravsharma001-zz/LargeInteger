@@ -39,6 +39,7 @@ public class Num  implements Comparable<Num> {
         }
     }
 
+
     /**
      * Convert long value in Num object with defaultBase
      * @param x Long value
@@ -433,6 +434,8 @@ public class Num  implements Comparable<Num> {
             index = 1;
         }
         Num temp = convertBaseToDecimal();
+//        temp.printList();
+//        System.out.println(temp.base());
         for(int i = temp.size()-1; i >=0; i--) {
             sb.append(temp.arr[i]);
         }
@@ -506,18 +509,17 @@ public class Num  implements Comparable<Num> {
 
     public Num convertBaseToDecimal() {
         if(this.base == 10) return this;
-        if(this == null) return null;
-
-        StringBuilder sb = new StringBuilder();
-        long carry = 0, tempDob;
-        Num temp;
-        Num result = new Num("0");
-        for(int i =0; i < this.size(); i++) {
-            tempDob = (this.arr[i] * (long) Math.pow(this.base, i));
-            temp = new Num(String.valueOf(tempDob));
-            result = Num.add(temp, result);
+        int digit = (int) Math.log10(this.base);
+        int size = this.size()*3;
+        long[] arr = new long[size];
+        int i = 0;
+        for(long l : this.arr) {
+            for(int t = 0; t < digit; t++) {
+                arr[i] = l%10;
+                i++; l = l / 10;
+            }
         }
-        return result;
+        return new Num(arr, 10, false);
     }
 
     /**
@@ -654,8 +656,8 @@ public class Num  implements Comparable<Num> {
     public static void main(String[] args) {
 
         Scanner in = new Scanner(System.in);
-        Num num1 = new Num(131412);
-        Num num2 = new Num(100);
+        Num num1 = new Num(75025);
+        Num num2 = new Num(46368);
         System.out.println("--------Menu Options Usage--------");
         System.out.println("Add: 1 <x>");
         System.out.println("Subtract: 2");
