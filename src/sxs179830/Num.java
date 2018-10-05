@@ -434,8 +434,6 @@ public class Num  implements Comparable<Num> {
             index = 1;
         }
         Num temp = convertBaseToDecimal();
-//        temp.printList();
-//        System.out.println(temp.base());
         for(int i = temp.size()-1; i >=0; i--) {
             sb.append(temp.arr[i]);
         }
